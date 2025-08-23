@@ -1,0 +1,14 @@
+{
+  "name": "subnautica-bz-api",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node index.js",
+    "serve": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "node-cache": "^5.1.2"
+  },
+  "packageManager": "npm@10.7.0"
+}
