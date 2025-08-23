@@ -11,17 +11,56 @@ const SERVER_TTL = 604800 // 1 week in seconds
 const DEFAULT_PORT = 24031;
 const ENABLE_CACHE = false; // we don't even use it because no invites.
 
+
+/**
+ *
+ * @param peerId
+ * @returns {
+ *   connectIP: string | undefined
+ * }
+ */
+function parsePeerId(peerId) {
+    if (!peerId || typeof peerId !== 'string') {
+        // comply with jsdoc
+        return {
+          connectIP: undefined
+        };
+    }
+    let serverIp = null;
+    if (peerId.includes(":")) {
+      const peerIdParts = peerId.split(":");
+      if (peerIdParts.length >= 3) {
+        // get connectIP from peerId and then +1 it because it's a string literal
+        const index = peerIdParts.indexOf("connectIP");
+        if (index !== -1 && index + 1 < peerIdParts.length) {
+          serverIp = peerIdParts[index + 1];
+        }
+      }
+    }
+
+    return {
+      ...serverIp ? { connectIP: serverIp } : {
+        connectIP: undefined
+      }
+    }
+}
+
 app.get("/api/createserver", (req, res) => {
     // note: the game does not support "port" but maybe if you wanna set it manually idk
     const { peerId, v, port } = req.query || {};
+
     if (!peerId || !v) {
         return res.status(400).json({ error: "Missing peerId or v parameter" });
     }
 
+    // There's a design flaw where it will send back the public IP address of the host. This is completely unnecessary and may cause
+    // NAT reflection issues. To prevent this, we will parse the peerId to get the IP address of the format `ANYTHING:connectIP:127.0.0.1`
+    const { connectIP: serverIp } = parsePeerId(peerId);
+
     const server = {
       JoinCode: "JOIN_VIA_IP",
       AccessToken: "placeholder_access_token",
-      ServerIp: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+      ServerIp: serverIp || req.headers['x-forwarded-for'] || req.socket.remoteAddress,
       ServerPort: port || 666,
       _meta: {
         peerId: peerId,
