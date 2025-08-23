@@ -3,13 +3,13 @@ const NodeCache = require( "node-cache" );
 
 const app = express();
 
-const myCache = new NodeCache();
-
+const bzServers = new NodeCache();
 
 // CONSTANTS
 const SERVER_TTL = 604800 // 1 week in seconds
 // https://www.kaverti.com/en/internal-services/ports
 const DEFAULT_PORT = 24031;
+const ENABLE_CACHE = false; // we don't even use it because no invites.
 
 app.get("/api/createserver", (req, res) => {
     // note: the game does not support "port" but maybe if you wanna set it manually idk
@@ -29,7 +29,10 @@ app.get("/api/createserver", (req, res) => {
       }
     }
 
-    myCache.set(peerId, server, SERVER_TTL);
+    if(ENABLE_CACHE) {
+      bzServers.set(peerId, server, SERVER_TTL);
+    }
+
     delete server._meta;
     res.json(server);
 })

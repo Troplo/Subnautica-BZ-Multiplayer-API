@@ -13,3 +13,4 @@ It's only 60 lines of code, so MIT I guess.
 1. Git clone this repository.
 2. Run `npm install` in the root directory. Make sure you have Node.js installed.
 3. Run `npm start` to start the API server.
+4. It runs on port `24031` by default, you can set the port by setting the `PORT` environment variable.
