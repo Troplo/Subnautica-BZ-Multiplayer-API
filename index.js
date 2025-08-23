@@ -90,7 +90,7 @@ app.get("/api/leaveserver", (req, res) => {
 })
 
 // Would normally return { ServerIp: string; ServerPort: number } but we don't support invites.
-app.get("/joinserver", (req, res) => {
+app.get("/api/joinserver", (req, res) => {
   const { peerId, joinCode } = req.query || {};
   res.json({
     IsError: true,
