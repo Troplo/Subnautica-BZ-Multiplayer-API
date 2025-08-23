@@ -21,7 +21,7 @@ app.get("/api/createserver", (req, res) => {
     const server = {
       JoinCode: "JOIN_VIA_IP",
       AccessToken: "placeholder_access_token",
-      ServerIp: req.headers['x-forwarded-for'],
+      ServerIp: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
       ServerPort: port || 666,
       _meta: {
         peerId: peerId,
