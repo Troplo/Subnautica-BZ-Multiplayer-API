@@ -9,6 +9,7 @@ const bzServers = new NodeCache();
 const SERVER_TTL = 604800 // 1 week in seconds
 // https://www.kaverti.com/en/internal-services/ports
 const DEFAULT_PORT = 24031;
+const DEFAULT_GAME_SERVER_PORT = 24032; // Originally 666, but <= 1024 cannot bind without root permissions on UNIX by default. REQUIRES 1.0.1+
 const ENABLE_CACHE = false; // we don't even use it because no invites.
 
 
@@ -61,7 +62,7 @@ app.get("/api/createserver", (req, res) => {
       JoinCode: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
       AccessToken: "placeholder_access_token",
       ServerIp: serverIp || req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-      ServerPort: port || 666,
+      ServerPort: port || DEFAULT_GAME_SERVER_PORT,
       _meta: {
         peerId: peerId,
         v: v,
